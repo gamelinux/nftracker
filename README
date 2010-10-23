@@ -1,0 +1,21 @@
+# nftracker - The Network File Tracker #
+
+nftracker is a networks sniffing daemon that will read a pcap file
+or sniff a network interface and look for files that traverse your
+network. nftracker is session oriented, and will print out the files
+seen in a session.
+
+The output will be like:
+timestamp,[         session             ],FILE_TYPE
+timestamp,proto,src_ip,src_port,dst_ip,dst_port,FILE_TYPE
+
+1287847447,6,192.168.22.100,5623,192.168.22.200,80,html
+1287847447,6,192.168.22.100,5623,192.168.22.200,80,gif
+1287847448,6,192.168.22.100,5623,192.168.22.200,80,jpg
+
+1287848107,17,192.168.22.100,7342,192.168.22.200,2049,zip
+1287848107,17,192.168.22.100,7342,192.168.22.200,2049,pdf
+1287848108,17,192.168.22.100,7342,192.168.22.200,2049,doc
+1287848108,17,192.168.22.100,7342,192.168.22.200,2049,mpeg
+1287848111,17,192.168.22.100,7342,192.168.22.200,2049,bmp
+
