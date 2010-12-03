@@ -14,7 +14,7 @@ FILTER_OBJ = util-filter.o util-filter-network.o
 SEARCH_OBJ = util-search.o util-search-pcre.o
 LOG_OBJ = util-log.o util-log-cvs.o
 SESSION_OBJ = util-session-queue.o util-session.o 
-MISC_OBJ = bstrlib.o config.o util-system.o util-stats.o
+MISC_OBJ = bstrlib.o config.o util-stats.o
 SYSTEM_OBJ = util-system.o util-system-end.o
 OBJECTS = ${MISC_OBJ} ${SESSION_OBJ} ${LOG_OBJ} ${DECODE_OBJ} ${FILTER_OBJ} ${SEARCH_OBJ} ${SYSTEM_OBJ} nftracker.o
 
