@@ -1,4 +1,4 @@
-# nftracker - The Network File Tracker #
+# nftracker - The Network File Tracker
 
 nftracker is a networks sniffing daemon that will read a pcap file
 or sniff a network interface and look for files that traverse your
@@ -19,3 +19,4 @@ timestamp,proto,src_ip,src_port,dst_ip,dst_port,FILE_TYPE
 1287848108,17,192.168.22.100,7342,192.168.22.200,2049,mpeg
 1287848111,17,192.168.22.100,7342,192.168.22.200,2049,bmp
 
+# Future releases might include other features
