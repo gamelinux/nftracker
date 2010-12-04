@@ -157,7 +157,6 @@ int preallocate_cxt (void)
 
 int main(int argc, char *argv[])
 {
-    printf("%08x =? %08x, endianness: %s\n\n", 0xdeadbeef, ntohl(0xdeadbeef), (0xdead == ntohs(0xdead)?"big":"little") );
     memset(&config, 0, sizeof(globalconfig));
     int ch = 0;
     set_default_config_options();
@@ -197,7 +196,8 @@ int main(int argc, char *argv[])
             config.bpff = strdup(optarg);
             break;
         case 'v':
-//            config.verbose++;
+            //config.verbose++;
+            SET_CONFIG_VERBOSE(config);
             break;
 //        case 'd':
 //            config.dpath = strdup(optarg);
@@ -227,6 +227,10 @@ int main(int argc, char *argv[])
             break;
         }
 
+    if (ISSET_CONFIG_VERBOSE(config)) {
+        printf("%08x =? %08x, endianness: %s\n\n", 0xdeadbeef, ntohl(0xdeadbeef), (0xdead == ntohs(0xdead)?"big":"little") );
+    }
+                
     //parse_config_file(pconfile);
     //init_logging();
     bdestroy (pconfile);

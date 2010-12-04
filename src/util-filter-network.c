@@ -15,20 +15,24 @@ int parse_network (char *net_s, struct in6_addr *network)
             perror("parse_nets6");
             return -1;
         }
-        printf("Network6 %-36s \t -> %08x:%08x:%08x:%08x\n",
+        if (ISSET_CONFIG_VERBOSE(config)) {
+            printf("Network6 %-36s \t -> %08x:%08x:%08x:%08x\n",
                net_s,
                network->s6_addr32[0],
                network->s6_addr32[1],
                network->s6_addr32[2],
                network->s6_addr32[3]
-              );
+            );
+        }
     } else {
         type = AF_INET;
         if (!inet_pton(type, net_s, &network->s6_addr32[0])) {
             perror("parse_nets");
             return -1;
         }
-        printf("Network4 %16s \t-> 0x%08x\n", net_s, network->s6_addr32[0]);
+        if (ISSET_CONFIG_VERBOSE(config)) {
+            printf("Network4 %16s \t-> 0x%08x\n", net_s, network->s6_addr32[0]);
+        }
     }
     return type;
 }
@@ -50,7 +54,7 @@ int parse_netmask (char *f, int type, struct in6_addr *netmask)
     } else {
         // cidr form
         sscanf(f, "%u", &mask);
-        printf("cidr  %u \t-> ", mask);
+        if (ISSET_CONFIG_VERBOSE(config)) printf("cidr  %u \t-> ", mask);
         if (type == AF_INET) {
             uint32_t shift = 32 - mask;
             if (mask)
@@ -58,7 +62,7 @@ int parse_netmask (char *f, int type, struct in6_addr *netmask)
             else
                 netmask->s6_addr32[0] = 0;
 
-            printf("0x%08x\n", netmask->s6_addr32[0]);
+            if (ISSET_CONFIG_VERBOSE(config)) printf("0x%08x\n", netmask->s6_addr32[0]);
         } else if (type == AF_INET6) {
             //mask = 128 - mask;
             int j = 0;
@@ -72,7 +76,7 @@ int parse_netmask (char *f, int type, struct in6_addr *netmask)
                 netmask->s6_addr[j] = -1 << (8 - mask);
             }
             inet_ntop(type, &netmask->s6_addr32[0], output, MAX_NETS);
-            printf("mask: %s\n", output);
+            if (ISSET_CONFIG_VERBOSE(config)) printf("mask: %s\n", output);
             // pcap packets are in host order.
             netmask->s6_addr32[0] = ntohl(netmask->s6_addr32[0]);
             netmask->s6_addr32[1] = ntohl(netmask->s6_addr32[1]);
