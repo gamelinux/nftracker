@@ -29,4 +29,42 @@ extern globalconfig config;
 
 /* F U N C T I O N S  ********************************************************/
 
+void set_default_config_options()
+{
+//    config.ctf    |= CO_SYN;
+//    config.ctf    |= CO_RST;
+//    config.ctf    |= CO_FIN;
+//    config.ctf    |= CO_ACK;
+ //   config.ctf    |= CO_SYNACK;
+    //config.ctf    |= CO_ICMP;
+    //config.ctf    |= CO_UDP;
+    //config.ctf    |= CO_OTHER;
+    config.cof    |= CS_TCP_SERVER;
+    config.cof    |= CS_TCP_CLIENT;
+    config.cof    |= CS_UDP_SERVICES;
+    config.dev     = strdup("eth0");
+    config.bpff    = strdup("");
+//    config.dpath   = "/tmp";
+    config.pidfile = strdup("prads.pid");
+    config.pidpath = strdup("/var/run");
+//    config.assetlog= bfromcstr(LOGDIR PRADS_ASSETLOG);
+    // default source net owns everything
+    config.s_net   = "0.0.0.0/0,::/0";
+    config.errbuf[0] = '\0';
+//    config.configpath = CONFDIR "";
+    // files should be relative to configpath somehow
+//    config.sig_file_syn = CONFDIR "tcp-syn.fp";
+//    config.sig_file_synack = CONFDIR "tcp-synack.fp";
+//    config.sig_file_ack = CONFDIR "tcp-stray-ack.fp";
+//    config.sig_file_fin = CONFDIR "tcp-fin.fp";
+//    config.sig_file_rst = CONFDIR "tcp-rst.fp";
+//    config.sig_syn = NULL;
+//    config.sig_synack = NULL;
+//    config.sig_ack = NULL;
+//    config.sig_fin = NULL;
+//    config.sig_rst = NULL;
+//    config.sig_hashsize = 241;
+    // don't chroot by default
+    config.chroot_dir = NULL;
+}
 

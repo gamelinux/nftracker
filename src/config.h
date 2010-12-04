@@ -55,4 +55,6 @@ typedef struct _globalconfig {
 #define UNSET_CONFIG_INTR(config)     (config.cflags &= ~0x08)
 
 
+
+void set_default_config_options();
 #endif                          // CONFIG_H

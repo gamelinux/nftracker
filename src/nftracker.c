@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
     printf("%08x =? %08x, endianness: %s\n\n", 0xdeadbeef, ntohl(0xdeadbeef), (0xdead == ntohs(0xdead)?"big":"little") );
     memset(&config, 0, sizeof(globalconfig));
     int ch = 0;
-    //set_default_config_options();
+    set_default_config_options();
     bstring pconfile = bfromcstr(CONFDIR "nftracker.conf");
 
     cxtbuffer = NULL;
