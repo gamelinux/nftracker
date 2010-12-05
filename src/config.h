@@ -23,6 +23,7 @@ typedef struct _globalconfig {
     char        *net_ip_string;         /**/
     connection  *bucket[BUCKET_SIZE];   /* Pointer to list of ongoing connections */
     connection  *cxtbuffer;             /* Pointer to list of expired connections */
+    signature   *sig_file;              /* Pointer to list of file signatures */
     bstring     sig_file_magic;         /* Filename containing magic header signatures*/
     bstring     nftlog;                 /* Filename of nft.log */
     bstring     pcap_file;              /* Filename to pcap too read */

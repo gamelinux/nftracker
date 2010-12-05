@@ -709,24 +709,11 @@ typedef struct _asset {
 } asset;
 
 typedef struct _signature {
-    bstring service;            /* Service (i.e. SSH, WWW, etc.) */
-    uint16_t port;              /* Port to check for this service, or 0 for all */
-    /*
-     * Should be able to specify range, and such... 
-     */
-    /*
-     * Snort style : [80,8080,100-200,20-30,!22] 
-     */
-    /*
-     * Not sure how to do that... yet.... 
-     */
-    struct {                    /* Application Title, broken up into 3 parts. */
-        bstring app;            /* Application */
-        bstring ver;            /* Version */
-        bstring misc;           /* Misc info */
-    } title;
-    pcre *regex;                /* Signature - Compiled Regular Expression */
-    pcre_extra *study;          /* Studied version of the compiled regex. */
+    bstring filetype;           /* filetype (i.e. PDF, GIF, EXE....) */
+    pcre *regex_start;          /* start_sig - compiled regular expression */
+    pcre *regex_stop;           /* stop_sig - compiled regular expression */
+    pcre_extra *study_start;    /* Studied version of the compiled regex. */
+    pcre_extra *study_stop;     /* Studied version of the compiled regex. */
     struct {                    /* Signature stats */
         uint32_t    checked;    /* How many times the sig has been matched for */
         uint32_t    matched;    /* How many times it has matched*/

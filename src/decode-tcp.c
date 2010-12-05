@@ -2,12 +2,10 @@
 #include "config.h"
 #include "util-log.h"
 #include "util-session.h"
+#include "util-search-payload.h"
 #include "decode-tcp.h"
 
 extern globalconfig config;
-
-void prepare_tcp (packetinfo *pi);
-void parse_tcp (packetinfo *pi);
 
 void prepare_tcp (packetinfo *pi)
 {
@@ -34,6 +32,10 @@ void prepare_tcp (packetinfo *pi)
 void parse_tcp (packetinfo *pi)
 {
     //update_asset(pi);
+    vlog(0x3, "[*] - Got TCP package...\n");
+    //printf("[*] - Got TCP package...\n");
+    search_payload(pi);
+
 
     if (TCP_ISFLAGSET(pi->tcph, (TF_SYN))) {
         if (!TCP_ISFLAGSET(pi->tcph, (TF_ACK))) {

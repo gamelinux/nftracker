@@ -27,6 +27,7 @@
 #include "decode.h"
 #include "decode-ipv4.h"
 #include "decode-ipv6.h"
+#include "util-search.h"
 #include "util-system.h"
 #include "util-system-end.h"
 #include "util-log.h"
@@ -248,6 +249,7 @@ int main(int argc, char *argv[])
 //load_servicefp_file(1, CONFDIR "tcp-service.sig");
 
     //init_services();
+    init_sigs();
 
     if (config.pcap_file) {
         /* Read from PCAP file specified by '-r' switch. */
