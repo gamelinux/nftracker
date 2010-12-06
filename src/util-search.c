@@ -13,7 +13,7 @@ int init_sigs (void)
     add_sig_html();
     add_sig_doc();
     add_sig_exe();
-    //add_sig_exe();
+    add_sig_exe();
     return 0;
 }
 
@@ -129,7 +129,7 @@ int add_sig_doc(void)
     sig->next = NULL;
     sig->prev = NULL;
     pcre_start = bfromcstr("\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1");
-    pcre_stop = bfromcstr("THISMUSTNOTEXISTEVER");
+    pcre_stop = bfromcstr("MSWordDoc");
     sig->filetype = bfromcstr("doc");
 
     sig->regex_start = pcre_compile((char *)bdata(pcre_start), 0, &err, &erroffset, NULL);
