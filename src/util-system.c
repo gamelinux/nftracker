@@ -82,7 +82,7 @@ int drop_privs(void)
                     elog("ERROR: you have chrootetd and must set numeric group ID.\n");
                     exit(1);
                 }else{
-                    elog("ERROR: couldn't get ID for group %s, group does not exist.", config.group_name);
+                    elog("ERROR: couldn't get ID for group %s, group does not exist.\n", config.group_name);
                     exit(1);
                 }
             }
@@ -97,13 +97,17 @@ int drop_privs(void)
         do_setgid = 1;
         if (isdigit(config.user_name[0]) == 0) {
             pw = getpwnam(config.user_name);
-            userid = pw->pw_uid;
+            if (pw != NULL) {
+                userid = pw->pw_uid;
+            } else {
+                printf("[E] User %s not found!\n", config.user_name);
+            }
         } else {
             userid = strtoul(config.user_name, &endptr, 10);
             pw = getpwuid(userid);
         }
 
-        if (config.group_name == NULL) {
+        if (config.group_name == NULL && pw != NULL) {
             groupid = pw->pw_gid;
         }
     }

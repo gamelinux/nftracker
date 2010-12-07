@@ -25,6 +25,7 @@
 #include "common.h"
 #include "bstrlib.h"
 #include <pcre.h>
+#include "util-session-file.h"
 
 /*  D E F I N E S  ************************************************************/
 #define VERSION                       "0.0.1"
@@ -522,8 +523,9 @@ typedef struct _connection {
     uint8_t  s_tcpFlags;          /* tcpflags sent by source */
     uint8_t  d_tcpFlags;          /* tcpflags sent by destination */
     uint8_t  check;               /* Flags spesifying checking */
-    struct   _asset *c_asset;     /* pointer to src asset */
-    struct   _asset *s_asset;     /* pointer to server asset */
+    struct   _files *files;       /* pointer to list of files found in sessions */
+//    struct   _asset *c_asset;     /* pointer to src asset */
+//    struct   _asset *s_asset;     /* pointer to server asset */
     struct   _cxtbucket *cb;
 } connection;
 #define CXT_DONT_CHECK_SERVER     0x01  /* Dont check server packets */

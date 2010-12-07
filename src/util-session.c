@@ -60,8 +60,9 @@ connection *connection_alloc(void)
     cxt->prev = NULL;
     cxt->hnext = NULL;
     cxt->hprev = NULL;
-    cxt->c_asset = NULL;
-    cxt->s_asset = NULL;
+    //cxt->c_asset = NULL;
+    //cxt->s_asset = NULL;
+    cxt->files = NULL;
 
     return cxt;
 }
@@ -271,8 +272,9 @@ void cxt_new (connection *cxt, packetinfo *pi)
         cxt->d_port = pi->d_port;
         cxt->proto = (pi->ip4 ? pi->ip4->ip_p : pi->ip6->next);
         cxt->check = 0x00;
-        cxt->c_asset = NULL;
-        cxt->s_asset = NULL;
+        //cxt->c_asset = NULL;
+        //cxt->s_asset = NULL;
+        cxt->files = NULL;
         cxt->reversed = 0;
         pi->sc = SC_CLIENT;
 }
@@ -311,7 +313,8 @@ void reverse_pi_cxt(packetinfo *pi)
     cxt->d_port = tmp_port;
 
     /* Not taking any chances :P */
-    cxt->c_asset = cxt->s_asset = NULL;
+    //cxt->c_asset = cxt->s_asset = NULL;
+    cxt->files = NULL;
     cxt->check = 0x00;
 
     /* Then we change pi */

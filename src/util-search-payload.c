@@ -31,9 +31,8 @@ void search_payload(packetinfo *pi)
     int retval = 0;
     signature *tmpsig;
 
-    if (pi->plen < 10) return; // if almost no payload - skip !?
+    if (pi->plen < 3) return; // if almost no payload - skip !?
     tmplen = pi->plen;
-    //printf("[*] - Matching...\n");
 
     tmpsig = config.sig_file;
     while (tmpsig != NULL) {
@@ -41,7 +40,7 @@ void search_payload(packetinfo *pi)
                        0, 0, ovector, 15);
         if (rc >= 0) {
             printf("[*] - Matched start sig: %s\n",(char *)bdata(tmpsig->filetype));
-            //update_session_file_start(pi, tmpsig->filetype);
+            //update_session_file_start(pi, tmpsig);
             retval = 1;
         }
 
@@ -49,7 +48,7 @@ void search_payload(packetinfo *pi)
                        0, 0, ovector, 15);
         if (rc >= 0) {
             printf("[*] - Matched stop sig: %s\n",(char *)bdata(tmpsig->filetype));
-            //update_session_file_stop(pi, tmpsig->filetype);
+            //update_session_file_stop(pi, tmpsig);
             retval = 1;
         }
         if (retval == 1) return;
