@@ -31,4 +31,7 @@ void free_queue();
 void reverse_pi_cxt(packetinfo *pi);
 inline void connection_tracking(packetinfo *pi);
 inline uint32_t make_hash(packetinfo *pi);
+void end_sessions();
+void del_connection(connection * cxt, connection ** bucket_ptr);
+void end_all_sessions();
 #endif /* _UTIL_CXT_H */

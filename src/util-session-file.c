@@ -36,6 +36,22 @@ int update_session_file_start(packetinfo *pi, signature *sig)
     return 1;
 }
 
+int seen_session_file_start(packetinfo *pi, signature *sig)
+{
+   files *tmpfiles;
+    tmpfiles = pi->cxt->files;
+
+    while (tmpfiles != NULL) {
+        if ( tmpfiles->sig == sig) {
+            if (ISSET_FILE_START(tmpfiles)) {
+                return 0;
+            }
+        }
+        tmpfiles = tmpfiles->next;
+    }
+    return 1;
+}
+
 int update_session_file_end(packetinfo *pi, signature *sig)
 {
     files *tmpfiles;
@@ -43,9 +59,9 @@ int update_session_file_end(packetinfo *pi, signature *sig)
 
     while (tmpfiles != NULL) {
         if ( tmpfiles->sig == sig) {
-            SET_FILE_END(tmpfiles);
             if (ISSET_FILE_START(tmpfiles)) { // Should always be true here!
                 print_session(pi, sig->filetype);
+                UNSET_FILE_START(tmpfiles); // More files of same kind can pass
             }
             return 0;
         }

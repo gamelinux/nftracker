@@ -70,6 +70,14 @@ connection *connection_alloc(void)
 /* free the memory of a connection tracker */
 void connection_free(connection *cxt)
 {
+    files *tmpfiles = cxt->files;
+    files *nextfile = NULL;
+
+    while (tmpfiles != NULL) {
+        nextfile = tmpfiles->next;
+        free(tmpfiles);
+        tmpfiles = nextfile;
+    }
     free(cxt);
 }
 
@@ -320,6 +328,145 @@ void reverse_pi_cxt(packetinfo *pi)
     /* Then we change pi */
     if (pi->sc == SC_CLIENT) pi->sc = SC_SERVER;
         else pi->sc = SC_CLIENT;
+}
+
+void end_sessions()
+{
+
+    connection *cxt;
+    time_t check_time;
+    check_time = time(NULL);
+    int xpir;
+    uint32_t curcxt = 0;
+    uint32_t expired = 0;
+
+    for (cxt = cxt_est_q.bot; cxt != NULL;) {
+        xpir = 0;
+        curcxt++;
+        /*
+         * TCP
+         */
+        if (cxt->proto == IP_PROTO_TCP) {
+            /*
+             * FIN from both sides
+             */
+            if (cxt->s_tcpFlags & TF_FIN && cxt->d_tcpFlags & TF_FIN
+                    && (check_time - cxt->last_pkt_time) > 5) {
+                xpir = 1;
+            }                /*
+                 * RST from eather side 
+                 */
+            else if ((cxt->s_tcpFlags & TF_RST
+                    || cxt->d_tcpFlags & TF_RST)
+                    && (check_time - cxt->last_pkt_time) > 5) {
+                xpir = 1;
+            }                // Commented out, since &TF_SYNACK is wrong!
+                /*
+                 * if not a complete TCP 3-way handshake 
+                 */
+                //else if ( !cxt->s_tcpFlags&TF_SYNACK || !cxt->d_tcpFlags&TF_SYNACK && (check_time - cxt->last_pkt_time) > 10) {
+                //   xpir = 1;
+                //}
+                /*
+                 * Ongoing timout 
+                 */
+                //else if ( (cxt->s_tcpFlags&TF_SYNACK || cxt->d_tcpFlags&TF_SYNACK) && ((check_time - cxt->last_pkt_time) > 120)) {
+                //   xpir = 1;
+                //}
+            else if ((check_time - cxt->last_pkt_time) > TCP_TIMEOUT) {
+                xpir = 1;
+            }
+        }            /*
+             * UDP 
+             */
+        else if (cxt->proto == IP_PROTO_UDP
+                && (check_time - cxt->last_pkt_time) > 60) {
+            xpir = 1;
+        }            /*
+             * ICMP 
+             */
+        else if (cxt->proto == IP_PROTO_ICMP
+                || cxt->proto == IP6_PROTO_ICMP) {
+            if ((check_time - cxt->last_pkt_time) > 60) {
+                xpir = 1;
+            }
+        }            /*
+             * All Other protocols 
+             */
+        else if ((check_time - cxt->last_pkt_time) > TCP_TIMEOUT) {
+            xpir = 1;
+        }
+
+        if (xpir == 1) {
+            expired++;
+            xpir = 0;
+            /* remove from the hash */
+            if (cxt->hprev)
+                cxt->hprev->hnext = cxt->hnext;
+            if (cxt->hnext)
+                cxt->hnext->hprev = cxt->hprev;
+            if (cxt->cb->cxt == cxt)
+                cxt->cb->cxt = cxt->hnext;
+
+            connection *tmp = cxt;
+            cxt = cxt->prev;
+
+            /* cxt_requeue(tmp, &cxt_est_q, &cxt_log_q); */
+            cxt_requeue(tmp, &cxt_est_q, &cxt_spare_q);
+            CLEAR_CXT(tmp);
+            //printf("[*] connection deleted!!!\n");
+        } else {
+            cxt = cxt->prev;
+        }
+    }
+}
+
+void del_connection(connection * cxt, connection ** bucket_ptr)
+{
+    connection *prev = cxt->prev;       /* OLDER connections */
+    connection *next = cxt->next;       /* NEWER connections */
+
+    if (prev == NULL) {
+        // beginning of list
+        *bucket_ptr = next;
+        // not only entry
+        if (next)
+            next->prev = NULL;
+    } else if (next == NULL) {
+        // at end of list!
+        prev->next = NULL;
+    } else {
+        // a node.
+        prev->next = next;
+        next->prev = prev;
+    }
+
+    /*
+     * Free and set to NULL 
+     */
+    free(cxt);
+    cxt = NULL;
+}
+
+void end_all_sessions()
+{
+    connection *cxt;
+    int cxkey;
+    int expired = 0;
+    extern connection *bucket[BUCKET_SIZE];
+
+    for (cxkey = 0; cxkey < BUCKET_SIZE; cxkey++) {
+        cxt = bucket[cxkey];
+        while (cxt != NULL) {
+            expired++;
+            connection *tmp = cxt;
+            cxt = cxt->next;
+            del_connection(tmp, &bucket[cxkey]);
+            if (cxt == NULL) {
+                bucket[cxkey] = NULL;
+            }
+        }
+    }
 }
 
 

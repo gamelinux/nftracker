@@ -1,6 +1,7 @@
 #include "config.h"
 #include "util-stats.h"
 #include "util-system-end.h"
+#include "util-session.h"
 
 extern globalconfig config;
 
@@ -10,7 +11,7 @@ void set_end_sessions()
 
     if (ISSET_CONFIG_INPACKET(config) == 0) {
         config.tstamp = time(NULL);
-//        end_sessions();
+        end_sessions();
 //        update_file_list();
 //        intr_flag = 0;
         alarm(CHECK_TIMEOUT);
@@ -21,8 +22,8 @@ void gameover()
 {
     if (ISSET_CONFIG_INPACKET(config) == 0) {
 //        clear_file_list();
-//        end_all_sessions();
-//        free_queue();
+        end_all_sessions();
+        free_queue();
 //        del_signature_lists();
 //        unload_file_sigs();
 //        end_logging();

@@ -26,6 +26,7 @@ extern globalconfig config;
 
 int update_session_file_start (packetinfo *pi, signature *sig);
 int update_session_file_end (packetinfo *pi, signature *sig);
+int seen_session_file_start(packetinfo *pi, signature *sig);
 
 void search_payload(packetinfo *pi)
 {
@@ -43,19 +44,22 @@ void search_payload(packetinfo *pi)
         rc = pcre_exec(tmpsig->regex_start, tmpsig->study_start, pi->payload, tmplen,
                        0, 0, ovector, 15);
         if (rc >= 0) {
-            printf("[*] - Matched start sig: %s\n",(char *)bdata(tmpsig->filetype));
+            dlog("[*] - Matched start sig: %s\n",(char *)bdata(tmpsig->filetype));
             update_session_file_start(pi, tmpsig);
             retval = 1;
         }
 
-        rc = pcre_exec(tmpsig->regex_stop, tmpsig->study_stop, pi->payload, tmplen,
+        if (seen_session_file_start(pi, tmpsig) == 0) {
+            rc = pcre_exec(tmpsig->regex_stop, tmpsig->study_stop, pi->payload, tmplen,
                        0, 0, ovector, 15);
-        if (rc >= 0) {
-            printf("[*] - Matched stop sig: %s\n",(char *)bdata(tmpsig->filetype));
-            update_session_file_end(pi, tmpsig);
-            retval = 1;
+            if (rc >= 0) {
+                dlog("[*] - Matched stop sig: %s\n",(char *)bdata(tmpsig->filetype));
+                update_session_file_end(pi, tmpsig);
+                retval = 1;
+            }
         }
         if (retval == 1) return;
         tmpsig = tmpsig->next;
     }
 }
+
