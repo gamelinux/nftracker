@@ -25,7 +25,7 @@
 #include "common.h"
 #include "bstrlib.h"
 #include <pcre.h>
-#include "util-session-file.h"
+//#include "util-session-file.h"
 
 /*  D E F I N E S  ************************************************************/
 #define VERSION                       "0.0.1"
@@ -497,6 +497,18 @@ typedef struct _fp_entry {
     struct _fp_entry *next;
 } fp_entry;
 
+typedef struct _files {
+    struct  _files    *prev;     /* prev files structure */
+    struct  _files    *next;     /* next files structure */
+    struct  _signature *sig;     /* pointer to sig that matched */
+    uint8_t seen;                /* seen start/stop for sig */
+} files;
+#define SET_FILE_START(files)   (files->seen |= 0x01)
+#define SET_FILE_END(files)     (files->seen |= 0x02)
+#define ISSET_FILE_START(files) (files->seen &  0x01)
+#define ISSET_FILE_END(fileS)   (files->seen &  0x02)
+
+
 /*
  * Structure for connections
  */
@@ -523,7 +535,7 @@ typedef struct _connection {
     uint8_t  s_tcpFlags;          /* tcpflags sent by source */
     uint8_t  d_tcpFlags;          /* tcpflags sent by destination */
     uint8_t  check;               /* Flags spesifying checking */
-    struct   _files *files;       /* pointer to list of files found in sessions */
+    files    *files;              /* pointer to list of files found in sessions */
 //    struct   _asset *c_asset;     /* pointer to src asset */
 //    struct   _asset *s_asset;     /* pointer to server asset */
     struct   _cxtbucket *cb;

@@ -11,7 +11,8 @@ int update_session_file_start(packetinfo *pi, signature *sig)
     tmpfiles = pi->cxt->files;
 
     while (tmpfiles != NULL) {
-        if ( tmpfiles->sig == sig) {
+        signature *tmpsig = tmpfiles->sig;
+        if ( tmpsig == sig) {
             SET_FILE_START(tmpfiles);
             return 0;
         }
@@ -19,19 +20,20 @@ int update_session_file_start(packetinfo *pi, signature *sig)
     }
 
     if (tmpfiles == NULL) {
-        files *f = (files *)calloc(1, sizeof(files));
-        if (f == NULL) {
+        files *newfile = (files *)calloc(1, sizeof(files));
+        if (newfile == NULL) {
             printf("Error allocating file entry\n");
             exit(EXIT_FAILURE);
         }
-        f->prev = NULL;
-        f->next = pi->cxt->files;
-        f->sig = sig;
-        SET_FILE_START(f);
-        pi->cxt->files->prev = f;
-        pi->cxt->files = f;
+        newfile->prev = NULL;
+        newfile->next = pi->cxt->files;
+        newfile->sig = sig;
+        SET_FILE_START(newfile);
+        if (pi->cxt->files != NULL) pi->cxt->files->prev = newfile;
+        pi->cxt->files = newfile;
         return 0;
     }
+    return 1;
 }
 
 int update_session_file_end(packetinfo *pi, signature *sig)

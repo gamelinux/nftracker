@@ -20,8 +20,12 @@
 #include "nftracker.h"
 #include "config.h"
 #include "util-log.h"
+#include "util-session-file.h"
 
 extern globalconfig config;
+
+int update_session_file_start (packetinfo *pi, signature *sig);
+int update_session_file_end (packetinfo *pi, signature *sig);
 
 void search_payload(packetinfo *pi)
 {
@@ -40,7 +44,7 @@ void search_payload(packetinfo *pi)
                        0, 0, ovector, 15);
         if (rc >= 0) {
             printf("[*] - Matched start sig: %s\n",(char *)bdata(tmpsig->filetype));
-            //update_session_file_start(pi, tmpsig);
+            update_session_file_start(pi, tmpsig);
             retval = 1;
         }
 
@@ -48,7 +52,7 @@ void search_payload(packetinfo *pi)
                        0, 0, ovector, 15);
         if (rc >= 0) {
             printf("[*] - Matched stop sig: %s\n",(char *)bdata(tmpsig->filetype));
-            //update_session_file_stop(pi, tmpsig);
+            update_session_file_end(pi, tmpsig);
             retval = 1;
         }
         if (retval == 1) return;

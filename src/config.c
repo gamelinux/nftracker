@@ -20,7 +20,7 @@
 
 /*  I N C L U D E S  *********************************************************/
 #include "common.h"
-#include "nftracker.h"
+//#include "nftracker.h"
 #include "util-system.h"
 #include "config.h"
 
