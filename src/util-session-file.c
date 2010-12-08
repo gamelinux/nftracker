@@ -1,6 +1,7 @@
 #include "nftracker.h"
 #include "util-session-file.h"
 #include "util-log.h"
+#include "util-log-csv.h"
 #include "config.h"
 
 extern globalconfig config;
@@ -60,7 +61,8 @@ int update_session_file_end(packetinfo *pi, signature *sig)
     while (tmpfiles != NULL) {
         if ( tmpfiles->sig == sig) {
             if (ISSET_FILE_START(tmpfiles)) { // Should always be true here!
-                print_session(pi, sig->filetype);
+                if (ISSET_CONFIG_VERBOSE(config)) print_session(pi, sig->filetype);
+                log_files_csv(pi, sig->filetype);
                 UNSET_FILE_START(tmpfiles); // More files of same kind can pass
             }
             return 0;

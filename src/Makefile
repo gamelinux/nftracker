@@ -12,7 +12,7 @@ endif
 DECODE_OBJ = decode-ethernet.o decode-ipv4.o decode-ipv6.o decode-others.o decode-tcp.o decode-udp.o decode-vlan.o
 FILTER_OBJ = util-filter.o util-filter-network.o
 SEARCH_OBJ = util-search.o util-search-pcre.o util-search-payload.o
-LOG_OBJ = util-log.o util-log-cvs.o
+LOG_OBJ = util-log.o util-log-csv.o
 SESSION_OBJ = util-session-queue.o util-session.o util-session-file.o 
 MISC_OBJ = bstrlib.o config.o util-stats.o
 SYSTEM_OBJ = util-system.o util-system-end.o
