@@ -60,10 +60,10 @@ int update_session_file_end(packetinfo *pi, signature *sig)
 
     while (tmpfiles != NULL) {
         if ( tmpfiles->sig == sig) {
-            if (ISSET_FILE_START(tmpfiles)) { // Should always be true here!
+            if (ISSET_FILE_START(tmpfiles) && !ISSET_FILE_END(tmpfiles)) {
                 if (ISSET_CONFIG_VERBOSE(config)) print_session(pi, sig->filetype);
                 log_files_csv(pi, sig->filetype);
-                UNSET_FILE_START(tmpfiles); // More files of same kind can pass
+                SET_FILE_END(tmpfiles);
             }
             return 0;
         }

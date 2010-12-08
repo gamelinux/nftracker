@@ -41,15 +41,15 @@ void search_payload(packetinfo *pi)
 
     tmpsig = config.sig_file;
     while (tmpsig != NULL) {
-        rc = pcre_exec(tmpsig->regex_start, tmpsig->study_start, pi->payload, tmplen,
+        if (seen_session_file_start(pi, tmpsig) == 1) {
+            rc = pcre_exec(tmpsig->regex_start, tmpsig->study_start, pi->payload, tmplen,
                        0, 0, ovector, 15);
-        if (rc >= 0) {
-            dlog("[*] - Matched start sig: %s\n",(char *)bdata(tmpsig->filetype));
-            update_session_file_start(pi, tmpsig);
-            retval = 1;
-        }
-
-        if (seen_session_file_start(pi, tmpsig) == 0) {
+            if (rc >= 0) {
+                dlog("[*] - Matched start sig: %s\n",(char *)bdata(tmpsig->filetype));
+                update_session_file_start(pi, tmpsig);
+                retval = 1;
+            }
+        } else {
             rc = pcre_exec(tmpsig->regex_stop, tmpsig->study_stop, pi->payload, tmplen,
                        0, 0, ovector, 15);
             if (rc >= 0) {
