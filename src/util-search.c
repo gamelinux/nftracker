@@ -13,7 +13,7 @@ int init_sigs (void)
     add_sig_html();
     add_sig_doc();
     add_sig_exe();
-    add_sig_exe();
+    //add_sig_exe();
     return 0;
 }
 
@@ -155,8 +155,8 @@ int add_sig_exe(void)
 
     sig->next = NULL;
     sig->prev = NULL;
-    pcre_start = bfromcstr("\x4D\x5A");
-    pcre_stop = bfromcstr("This program cannot be run in DOS mode.");
+    pcre_start = bfromcstr("MZ\0\0\0\0\0\0\0\0\0\0PE"); // MZ\0\0\0\0\0\0\0\0\0\0PE // \x4D\x5A
+    pcre_stop = bfromcstr("This program cannot be run in DOS mode.|Windows Program|This program must be ");
     sig->filetype = bfromcstr("exe");
 
     sig->regex_start = pcre_compile((char *)bdata(pcre_start), 0, &err, &erroffset, NULL);

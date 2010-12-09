@@ -36,12 +36,12 @@ void search_payload(packetinfo *pi)
     int retval = 0;
     signature *tmpsig;
 
-    if (pi->plen < 3) return; // if almost no payload - skip !?
+    if (pi->plen <= 0) return; // if almost no payload - skip !?
     tmplen = pi->plen;
 
     tmpsig = config.sig_file;
     while (tmpsig != NULL) {
-        if (seen_session_file_start(pi, tmpsig) == 1) {
+        if (seen_session_file_start(pi, tmpsig) == 1) { // Not seen start sig
             rc = pcre_exec(tmpsig->regex_start, tmpsig->study_start, pi->payload, tmplen,
                        0, 0, ovector, 15);
             if (rc >= 0) {
@@ -49,7 +49,8 @@ void search_payload(packetinfo *pi)
                 update_session_file_start(pi, tmpsig);
                 retval = 1;
             }
-        } else {
+        }
+        if (seen_session_file_start(pi, tmpsig) == 0 && seen_session_file_end(pi, tmpsig) == 1) { // Seen start sig and no end sig
             rc = pcre_exec(tmpsig->regex_stop, tmpsig->study_stop, pi->payload, tmplen,
                        0, 0, ovector, 15);
             if (rc >= 0) {
@@ -58,7 +59,7 @@ void search_payload(packetinfo *pi)
                 retval = 1;
             }
         }
-        if (retval == 1) return;
+        //if (retval == 1) return;
         tmpsig = tmpsig->next;
     }
 }

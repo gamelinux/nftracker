@@ -34,6 +34,7 @@ int update_session_file_start(packetinfo *pi, signature *sig)
         pi->cxt->files = newfile;
         return 0;
     }
+    dlog("Should not be here!!\n");
     return 1;
 }
 
@@ -45,6 +46,22 @@ int seen_session_file_start(packetinfo *pi, signature *sig)
     while (tmpfiles != NULL) {
         if ( tmpfiles->sig == sig) {
             if (ISSET_FILE_START(tmpfiles)) {
+                return 0;
+            }
+        }
+        tmpfiles = tmpfiles->next;
+    }
+    return 1;
+}
+
+int seen_session_file_end(packetinfo *pi, signature *sig)
+{
+    files *tmpfiles;
+    tmpfiles = pi->cxt->files;
+
+    while (tmpfiles != NULL) {
+        if ( tmpfiles->sig == sig) {
+            if (ISSET_FILE_END(tmpfiles)) {
                 return 0;
             }
         }
