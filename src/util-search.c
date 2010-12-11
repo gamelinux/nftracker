@@ -6,14 +6,33 @@
 
 extern globalconfig config;
 
+
+int make_file_signature (const char *sig_start, const char *sig_end, const char *filename);
+
 int init_sigs (void)
 {
+    const char *sig_start;
+    const char *sig_end;
+    const char *filename;
+
     add_sig_pdf();
     add_sig_zip();
     add_sig_html();
     add_sig_doc();
     add_sig_exe();
     //add_sig_exe();
+    sig_start = "\x47\x49\x46\x38\x37\x61";
+    sig_end = "\x00\x3b";
+    filename = "gif";
+    make_file_signature(sig_start, sig_end, filename);
+    sig_start = "\x47\x49\x46\x38\x39\x61";
+    sig_end = "\x00\x00\x3b";
+    filename = "gif";
+    make_file_signature(sig_start, sig_end, filename);
+    sig_start = "\xff\xd8\xff\xe0\x00\x10";
+    sig_end = "\xff\xd9";
+    filename = "jpg";
+    make_file_signature(sig_start, sig_end, filename);
     return 0;
 }
 
@@ -169,4 +188,34 @@ int add_sig_exe(void)
     bdestroy(pcre_stop);
     return 0;
 }
+
+int make_file_signature (const char *sig_start, const char *sig_end, const char *filename)
+{
+    const char *err = NULL;     /* PCRE */
+    int erroffset;              /* PCRE */
+    bstring pcre_start = NULL;
+    bstring pcre_stop = NULL;
+    signature *sig;
+
+    sig = (signature *) calloc(1, sizeof(signature));
+
+    sig->next = NULL;
+    sig->prev = NULL;
+    pcre_start = bfromcstr(sig_start);
+    pcre_stop = bfromcstr(sig_end);
+    sig->filetype = bfromcstr(filename);
+
+    sig->regex_start = pcre_compile((char *)bdata(pcre_start), 0, &err, &erroffset, NULL);
+    sig->regex_stop = pcre_compile((char *)bdata(pcre_stop), 0, &err, &erroffset, NULL);
+    sig->study_start = pcre_study(sig->regex_start, 0, &err);
+    sig->study_stop = pcre_study(sig->regex_stop, 0, &err);
+
+    add_sig_file(sig);
+    printf("[*] Added signature for file: %s\n", filename);
+    bdestroy(pcre_start);
+    bdestroy(pcre_stop);
+    return 1;
+}
+
+
 
