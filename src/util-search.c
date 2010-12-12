@@ -11,6 +11,8 @@ int make_file_signature (const char *sig_start, const char *sig_end, const char 
 int add_sig_png (void);
 int add_sig_jpg (void);
 int add_sig_gif (void);
+int add_sig_cws (void);
+int add_sig_fws (void);
 
 int init_sigs (void)
 {
@@ -22,7 +24,8 @@ int init_sigs (void)
     add_sig_png();
     add_sig_gif();
     add_sig_jpg();
-
+    add_sig_cws();
+    add_sig_fws();
     return 0;
 }
 
@@ -42,6 +45,32 @@ int add_sig_file (signature *sig)
         return 0;
     }
     return 1;
+}
+
+int add_sig_cws (void)
+{
+    const char *sig_start;
+    const char *sig_end;
+    const char *filename;
+
+    sig_start = "\x43\x57\x53[\x06\x07\x08\x09\x10]";
+    sig_end = "\x43\x57\x53";
+    filename = "cws";
+    make_file_signature(sig_start, sig_end, filename);
+    return 0;
+}
+
+int add_sig_fws (void)
+{
+    const char *sig_start;
+    const char *sig_end;
+    const char *filename;
+
+    sig_start = "\x46\x57\x53[\x04\x05\x06\x07\x08\x09\x10]";
+    sig_end = "\x46\x57\x53";
+    filename = "fws";
+    make_file_signature(sig_start, sig_end, filename);
+    return 0;
 }
 
 int add_sig_jpg (void)
@@ -170,7 +199,7 @@ int make_file_signature (const char *sig_start, const char *sig_end, const char 
     sig->study_stop = pcre_study(sig->regex_stop, 0, &err);
 
     add_sig_file(sig);
-    printf("[*] Added signature for file: %s\n", filename);
+    if (ISSET_CONFIG_VERBOSE(config)) printf("[*] Added signature for file: %s\n", filename);
     bdestroy(pcre_start);
     bdestroy(pcre_stop);
     return 1;
