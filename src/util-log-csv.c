@@ -3,17 +3,21 @@
 #include <stdio.h>
 #include "bstrlib.h"
 #include "util-log-csv.h"
+#include "config.h"
+
+extern globalconfig config;
 
 void log_files_csv (packetinfo *pi, bstring filetype)
 {
     FILE *nftFile;
-    char *nftfname;
-    nftfname = "/var/log/nftracker-csv.log";
+    //char *nftfname;
+    //nftfname = "/var/log/nftracker-csv.log";
 
-    nftFile = fopen(nftfname, "a");
+    nftFile = fopen(config.logfile, "a");
 
     if (nftFile == NULL) {
-        elog("[*] Cant open file %s\n",nftfname);
+        elog("[*] Cant open file %s\n",config.logfile);
+        return;
     }
 
     static char src_s[INET6_ADDRSTRLEN];

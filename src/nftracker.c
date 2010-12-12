@@ -162,6 +162,7 @@ int main(int argc, char *argv[])
     int ch = 0;
     set_default_config_options();
     bstring pconfile = bfromcstr(CONFDIR "nftracker.conf");
+    config.logfile = "/var/log/nftracker-csv.log"; // Default logfile if not defined in cmdline
 
     cxtbuffer = NULL;
     config.nftrackerid = 0;
@@ -176,7 +177,7 @@ int main(int argc, char *argv[])
     signal(SIGALRM, set_end_sessions);
     //signal(SIGALRM, game_over); // Use this to debug segfault when exiting :)
 
-    while ((ch = getopt(argc, argv, "C:c:b:d:Dg:hi:p:r:P:u:va:")) != -1)
+    while ((ch = getopt(argc, argv, "C:c:b:Dg:hi:p:r:P:u:va:l:")) != -1)
         switch (ch) {
         case 'a':
             config.s_net = strdup(optarg);
@@ -200,9 +201,9 @@ int main(int argc, char *argv[])
             //config.verbose++;
             SET_CONFIG_VERBOSE(config);
             break;
-//        case 'd':
-//            config.dpath = strdup(optarg);
-//            break;
+        case 'l':
+            config.logfile = strdup(optarg);
+            break;
         case 'h':
             usage();
             break;

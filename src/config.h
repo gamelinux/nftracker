@@ -29,6 +29,7 @@ typedef struct _globalconfig {
     bstring     pcap_file;              /* Filename to pcap too read */
     signature   *magic_file_sig;        /* Pointer to a list of magic file header signatures */
 //    fmask       *network[MAX_NETS];     /* Struct for fmask */
+    char        *logfile;               /* path/filename for csv-logfile */
     char        *dev;                   /* Device name to use for sniffing */
     char        *group_name;            /* Groupe to drop privileges too */
     char        *user_name;             /* User to drop privileges too */
