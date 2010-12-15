@@ -5,3 +5,4 @@ int add_sig_zip(void);
 int add_sig_html(void);
 int add_sig_doc(void);
 int add_sig_exe(void);
+int add_sig_deb(void);
