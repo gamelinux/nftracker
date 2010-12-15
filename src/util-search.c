@@ -26,6 +26,11 @@ int init_sigs (void)
     add_sig_jpg();
     add_sig_cws();
     add_sig_fws();
+    add_sig_deb();
+    //add_sig_tar(); // 75 73 74 61 72
+    //add_sig_z(); // 1f 9d
+    //add_sig_gzip(); // 1f 8b
+    //add_sig_bzip(); // 42 5A 68 39 31 41 59 26 53 59 || 90 40 78 74 9B|%KO%
     return 0;
 }
 
@@ -45,6 +50,19 @@ int add_sig_file (signature *sig)
         return 0;
     }
     return 1;
+}
+
+int add_sig_deb(void)
+{
+    const char *sig_start;
+    const char *sig_end;
+    const char *filename;
+
+    sig_start = "\x21\x3C\x61\x72\x63\x68\x3E\x0A\x64\x65\x62\x69\x61\x6E\x2D\x62\x69\x6E\x61\x72\x79\x20\x20\x20";
+    sig_end = "\x20\x20\x60\x0A\x32\x2E\x30\x0A\x63\x6F\x6E\x74\x72\x6F\x6C\x2E\x74\x61\x72\x2E\x67\x7A\x20\x20";
+    filename = "deb";
+    make_file_signature(sig_start, sig_end, filename);
+    return 0;
 }
 
 int add_sig_cws (void)
