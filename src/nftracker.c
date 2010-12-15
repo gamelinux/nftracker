@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
     memset(&config, 0, sizeof(globalconfig));
     int ch = 0;
     set_default_config_options();
-    bstring pconfile = bfromcstr(CONFDIR "nftracker.conf");
+    //bstring pconfile = bfromcstr(CONFDIR "nftracker.conf");
     config.logfile = "/var/log/nftracker-csv.log"; // Default logfile if not defined in cmdline
 
     cxtbuffer = NULL;
@@ -182,9 +182,9 @@ int main(int argc, char *argv[])
         case 'a':
             config.s_net = strdup(optarg);
             break;
-        case 'c':
-            pconfile = bfromcstr(optarg);
-            break;
+//        case 'c':
+//            pconfile = bfromcstr(optarg);
+//            break;
 //        case 'C':
 //            config.chroot_dir = strdup(optarg);
 //            break;
@@ -235,7 +235,7 @@ int main(int argc, char *argv[])
                 
     //parse_config_file(pconfile);
     //init_logging();
-    bdestroy (pconfile);
+    //bdestroy (pconfile);
 
     parse_nets(config.s_net, config.network);
 
