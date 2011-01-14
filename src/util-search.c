@@ -8,6 +8,7 @@ extern globalconfig config;
 
 
 int make_file_signature (const char *sig_start, const char *sig_end, const char *filename);
+int del_all_sigs_file (void);
 int add_sig_png (void);
 int add_sig_jpg (void);
 int add_sig_gif (void);
@@ -50,6 +51,22 @@ int add_sig_file (signature *sig)
         return 0;
     }
     return 1;
+}
+
+int del_all_sigs_file (void)
+{
+    signature *sig;
+    signature *tmp;
+    sig = config.sig_file;
+    while (sig != NULL) {
+        tmp = sig->next;
+        if (sig->filetype != NULL) bdestroy(sig->filetype);
+        if (sig->regex_start != NULL) free(sig->regex_start);
+        if (sig->regex_stop != NULL) free(sig->regex_stop);
+        free(sig);
+        sig = tmp;
+    }
+    return 0;
 }
 
 int add_sig_deb(void)
@@ -222,4 +239,6 @@ int make_file_signature (const char *sig_start, const char *sig_end, const char 
     bdestroy(pcre_stop);
     return 1;
 }
+
+
 

@@ -2,6 +2,7 @@
 #include "util-stats.h"
 #include "util-system-end.h"
 #include "util-session.h"
+#include "util-search.h"
 
 extern globalconfig config;
 
@@ -31,6 +32,8 @@ void gameover()
         print_pcap_stats();
         if (config.handle != NULL) pcap_close(config.handle);
 //        free_config(); // segfault here !
+        if (config.sig_file != NULL) del_all_sigs_file ();
+        free_config();
         printf("\nnftracker ended\n");
         exit(0);
     }
